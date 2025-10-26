@@ -1,8 +1,8 @@
 # Gherkin Scenarios
 
-## Feature 1 — Filter Events By City
+## Feature 1. Filter Events By City
 
-### Scenario 1 — When user hasn’t searched for a city, show upcoming events from all cities.
+### Scenario 1. When user hasn’t searched for a city, show upcoming events from all cities.
 
 *Given* the user is on the main event list page
 
@@ -10,7 +10,7 @@
 
 *Then* the system displays upcoming events from all available cities
 
-### Scenario 2 — User should see a list of suggestions when they search for a city.
+### Scenario 2. User should see a list of suggestions when they search for a city.
 
 *Given* the user is typing a city name in the search field
 
@@ -18,7 +18,7 @@
 
 *Then* the system displays a list of suggested cities that match the input
 
-### Scenario 3 — User can select a city from the suggested list.
+### Scenario 3. User can select a city from the suggested list.
 
 *Given* the user is viewing a list of suggested cities
 
@@ -26,9 +26,9 @@
 
 *Then* the event list is updated to show only events in the selected city
 
-## Feature 2 — Show/Hide Event Details
+## Feature 2. Show/Hide Event Details
 
-### Scenario 1 — An event element is collapsed by default.
+### Scenario 1. An event element is collapsed by default.
 
 *Given* the user views the list of events
 
@@ -36,7 +36,7 @@
 
 *Then* all event elements are collapsed and only basic information is visible
 
-### Scenario 2 — User can expand an event to see details.
+### Scenario 2. User can expand an event to see details.
 
 *Given* an event element is collapsed
 
@@ -44,7 +44,7 @@
 
 *Then* the event details (date, time, description) are shown
 
-### Scenario 3 — User can collapse an event to hide details.
+### Scenario 3. User can collapse an event to hide details.
 
 *Given* an event element is expanded and showing details
 
@@ -52,9 +52,9 @@
 
 *Then* the event details are hidden and the element returns to its collapsed state
 
-## Feature 3 — Specify Number of Events
+## Feature 3. Specify Number of Events
 
-### Scenario 1 — When user hasn’t specified a number, 32 events are shown by default.
+### Scenario 1. When user hasn’t specified a number, 32 events are shown by default.
 
 *Given* the user is on the main event list page
 
@@ -62,7 +62,7 @@
 
 *Then* the system displays exactly 32 events by default
 
-### Scenario 2 — User can change the number of events displayed.
+### Scenario 2. User can change the number of events displayed.
 
 *Given* the user has access to the number of events setting
 
@@ -70,9 +70,9 @@
 
 *Then* the system displays only the specified number of events
 
-## Feature 4 — Use the App When Offline
+## Feature 4. Use the App When Offline
 
-### Scenario 1 — Show cached data when there’s no internet connection.
+### Scenario 1. Show cached data when there’s no internet connection.
 
 *Given* the user has previously loaded event data while online
 
@@ -82,7 +82,7 @@
 
 *Then* the system displays the most recently cached event data
 
-### Scenario 2 — Show error when user changes search settings (city, number of events).
+### Scenario 2. Show error when user changes search settings (city, number of events).
 
 *Given* the user is offline and viewing cached data
 
@@ -90,9 +90,9 @@
 
 *Then* the system displays an error message indicating a connection is required to fetch new data
 
-## Feature 5 — Add an App Shortcut to the Home Screen
+## Feature 5. Add an App Shortcut to the Home Screen
 
-### Scenario 1 — User can install the meet app as a shortcut on their device home screen.
+### Scenario 1. User can install the meet app as a shortcut on their device home screen.
 
 *Given* the user is viewing the app in a mobile browser (or an install prompt is visible)
 
@@ -100,9 +100,9 @@
 
 *Then* a shortcut icon for the event app is successfully created on the device's home screen
 
-## Feature 6 — Display Charts Visualizing Event Details
+## Feature 6. Display Charts Visualizing Event Details
 
-### Scenario 1 — Show a chart with the number of upcoming events in each city.
+### Scenario 1. Show a chart with the number of upcoming events in each city.
 
 *Given* the event data contains upcoming events across multiple cities
 
