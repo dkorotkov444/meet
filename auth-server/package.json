@@ -1,12 +1,15 @@
 {
   "name": "auth-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Authorization server for Meet App",
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Dmitri Korotkov",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^164.1.0"
+  }
 }

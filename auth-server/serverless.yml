@@ -1,0 +1,36 @@
+service: auth-server
+
+provider:
+ name: aws
+ runtime: nodejs18.x
+ region: eu-central-1
+ timeout: 29 # optional, in seconds, default is 6
+ environment:
+    CLIENT_ID: ${file(config.json):CLIENT_ID}
+    CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
+    CALENDAR_ID: ${file(config.json):CALENDAR_ID}
+
+functions:
+  getAuthURL:
+    handler: handler.getAuthURL
+    events:
+      - http:
+          method: get
+          path: api/get-auth-url
+          cors: true
+
+  getAccessToken:
+    handler: handler.getAccessToken
+    events:
+      - http:
+          method: get
+          path: api/token/{code}
+          cors: true
+
+  getCalendarEvents:
+    handler: handler.getCalendarEvents
+    events:
+      - http:
+          method: get
+          path: api/calendar-events/{access_token}
+          cors: true

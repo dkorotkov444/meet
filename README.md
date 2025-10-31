@@ -194,6 +194,16 @@ Notes
 - The project is a React + Vite app. For local development, use the scripts in `package.json` (e.g., `npm install` then `npm run dev`).
 - Formatted user stories and scenarios are available in `docs/user-stories.md` and `docs/scenarios.md`.
 
+## Authentication (Google OAuth)
+
+The serverless handlers in `auth-server/` implement three small helpers used by the app:
+
+- `getAuthURL` — returns the Google OAuth consent URL to start the sign-in flow and obtain an authorization code.
+- `getAccessToken` — exchanges the authorization code for a short-lived access token.
+- `getCalendarEvents` — calls Google Calendar with the access token and returns the user's events.
+
+These handlers keep secrets server-side and enable a secure OAuth flow for fetching calendar data.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
