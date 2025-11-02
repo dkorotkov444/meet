@@ -1,7 +1,7 @@
 /*
  * src/mock-data.js
  * Mock data for testing and development.
- * Contains a list of sample events.
+ * Contains a list of 43 sample events.
  */ 
 
 // --- Mock event data ---
