@@ -1,10 +1,20 @@
-// src/App.jsx
-import React from 'react'
+/*
+ * src/App.jsx
+ * Root application component.
+ */
+
+// --- External libraries ---
+import React from 'react';
+
+// --- Local components ---
+import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
 
+// App component composes the page from smaller components
 const App = () => {
     return (
         <div className='App'>
+            <CitySearch />
             <EventList />
         </div>
     );
