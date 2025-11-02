@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Event from '../components/Event';
 import { getEvents } from '../api';
 
@@ -43,8 +44,37 @@ describe('<Event /> component', () => {
 			expect(queryByText(event.location)).toBeInTheDocument();
 		});
 
+		// Test case: details are hidden by default
+		test("event details are hidden by default", () => {
+			// description should not be present before user interaction
+			expect(queryByText(event.description)).not.toBeInTheDocument();
+		});
+
 		// Test case for rendering event details button
 		test('renders event details button with the title (show details)', () => {
+			expect(queryByText('show details')).toBeInTheDocument();
+		});
+
+		// Test: clicking "show details" reveals the event description and toggles the button
+		test('shows event details when user clicks "show details"', async () => {
+			const button = queryByText('show details');
+			await userEvent.click(button);
+			// description should be visible
+			expect(queryByText(event.description)).toBeInTheDocument();
+			// button should toggle to "hide details"
+			expect(queryByText('hide details')).toBeInTheDocument();
+		});
+
+		// Test: clicking "hide details" hides the description and toggles the button back
+		test('hides event details when user clicks "hide details"', async () => {
+			// open first
+			const openButton = queryByText('show details');
+			await userEvent.click(openButton);
+			const hideButton = queryByText('hide details');
+			await userEvent.click(hideButton);
+			// description should be hidden
+			expect(queryByText(event.description)).not.toBeInTheDocument();
+			// button should revert to "show details"
 			expect(queryByText('show details')).toBeInTheDocument();
 		});
 });

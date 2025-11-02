@@ -1865,4 +1865,19 @@ const mockEvents = [
     },
 ];
 
+// Normalize descriptions: remove newlines and collapse whitespace so tests that
+// compare the raw description string to rendered DOM text are less brittle.
+// This avoids editing each literal and keeps the original data structure.
+mockEvents.forEach((ev) => {
+    if (ev && ev.description && typeof ev.description === 'string') {
+        // remove carriage returns, replace one-or-more newlines with a space,
+        // then collapse any remaining multiple whitespace to a single space and trim.
+        ev.description = ev.description
+            .replace(/\r/g, '')
+            .replace(/\n+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+});
+
 export default mockEvents;
