@@ -39,12 +39,12 @@ npm run lint    # run ESLint
 Key Features
 ------------
 
-- Filter Events by City
-- Show/Hide Event Details
-- Specify Number of Events
-- Use the App When Offline
-- Add an App Shortcut to the Home Screen
-- Display Charts Visualizing Event Details
+1. Filter Events by City
+2. Show/Hide Event Details
+3. Specify Number of Events
+4. Use the App When Offline
+5. Add an App Shortcut to the Home Screen
+6. Display Charts Visualizing Event Details
 
 User Stories
 ------------
@@ -76,11 +76,9 @@ User story: As a user or organizer, I should be able to view charts visualizing 
 Scenarios
 ---------
 
-The scenarios below are presented in plain Markdown so the Gherkin keywords render with emphasis.
-
 ### Feature 1. Filter Events By City
 
-#### Scenario 1. When user hasnâ€™t searched for a city, show upcoming events from all cities.
+#### Scenario 1. When user has not searched for a city, show upcoming events from all cities.
 
 *Given* the user is on the main event list page
 
@@ -132,7 +130,7 @@ The scenarios below are presented in plain Markdown so the Gherkin keywords rend
 
 ### Feature 3. Specify Number of Events
 
-#### Scenario 1. When user hasnâ€™t specified a number, 32 events are shown by default.
+#### Scenario 1. When user has not specified a number, 32 events are shown by default.
 
 *Given* the user is on the main event list page
 
@@ -150,7 +148,7 @@ The scenarios below are presented in plain Markdown so the Gherkin keywords rend
 
 ### Feature 4. Use the App When Offline
 
-#### Scenario 1. Show cached data when thereâ€™s no internet connection.
+#### Scenario 1. Show cached data when there is no internet connection.
 
 *Given* the user has previously loaded event data while online
 

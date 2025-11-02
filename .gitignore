@@ -26,3 +26,4 @@ dist-ssr
 
 # Testing
 src/assets/mock-data.json
+coverage

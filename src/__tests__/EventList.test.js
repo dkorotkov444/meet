@@ -3,6 +3,8 @@
  * Unit tests for EventList component.
  */
 
+/* eslint-env jest */
+
 // --- External libraries ---
 import React from 'react';
 import { render } from '@testing-library/react';

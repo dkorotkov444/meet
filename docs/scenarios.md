@@ -2,7 +2,7 @@
 
 ## Feature 1. Filter Events By City
 
-### Scenario 1. When user hasn’t searched for a city, show upcoming events from all cities.
+### Scenario 1. When user has not searched for a city, show upcoming events from all cities.
 
 *Given* the user is on the main event list page
 
@@ -54,7 +54,7 @@
 
 ## Feature 3. Specify Number of Events
 
-### Scenario 1. When user hasn’t specified a number, 32 events are shown by default.
+### Scenario 1. When user has not specified a number, 32 events are shown by default.
 
 *Given* the user is on the main event list page
 
@@ -72,7 +72,7 @@
 
 ## Feature 4. Use the App When Offline
 
-### Scenario 1. Show cached data when there’s no internet connection.
+### Scenario 1. Show cached data when there is no internet connection.
 
 *Given* the user has previously loaded event data while online
 
