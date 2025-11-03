@@ -7,12 +7,14 @@
 
 // --- External libraries ---
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';   
+import { render, fireEvent, within } from '@testing-library/react';   
 import { userEvent } from "@testing-library/user-event"; 
 // --- Local modules ---
+import App from '../App';
 import CitySearch from '../components/CitySearch';
 import { extractLocations, getEvents } from '../api';
 
+// Unit test suite for CitySearch component
 describe('<CitySearch /> component', () => {
 
     let CitySearchComponent;
@@ -27,6 +29,7 @@ describe('<CitySearch /> component', () => {
 
     // Render a fresh component before each test with available locations
     beforeEach(() => {
+        // Use the shared allLocations fixture fetched in beforeAll
         CitySearchComponent = render(<CitySearch allLocations={allLocations} />);
     });
 
@@ -59,6 +62,12 @@ describe('<CitySearch /> component', () => {
     test('updates list of suggestions correctly when user types in city textbox', async () => {
         const user = userEvent.setup();
 
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={allLocations}
+            setCurrentCity={() => { }}
+            />);
+
         // user types "Berlin" in city textbox
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
         await user.type(cityTextBox, "Berlin");
@@ -80,6 +89,12 @@ describe('<CitySearch /> component', () => {
     test('renders the suggestion text in the textbox upon clicking on the suggestion', async () => {
         const user = userEvent.setup();
 
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={allLocations}
+            setCurrentCity={() => { }}
+            />);
+
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
         await user.type(cityTextBox, "Berlin");
         
@@ -88,11 +103,16 @@ describe('<CitySearch /> component', () => {
         await user.click(BerlinGermanySuggestion);
         
         expect(cityTextBox).toHaveValue(BerlinGermanySuggestion.textContent);
-      });
+    });
 
     // Test: clicking a suggestion should hide the suggestions list
     test('clicking a suggestion hides the suggestions list', async () => {
         const user = userEvent.setup();
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={allLocations}
+            setCurrentCity={() => { }}
+            />);
 
         const cityTextBox = CitySearchComponent.queryByRole('textbox');
         await user.type(cityTextBox, 'Berlin');
@@ -129,12 +149,15 @@ describe('<CitySearch /> component', () => {
         expect(CitySearchComponent.queryByRole('list')).not.toBeInTheDocument();
     });
 
-    // Small deterministic test to ensure the filter predicate is executed
-    // and to cover the branch that filters locations based on the input value.
+    // Small deterministic test to ensure the filter predicate is executed and to cover the branch that filters locations based on the input value.
     test('typing into textbox filters allLocations (direct filter predicate coverage)', () => {
         const locations = ['Berlin, Germany', 'London, UK'];
         // Use the component instance rendered in beforeEach to avoid duplicate roots
-        CitySearchComponent.rerender(<CitySearch allLocations={locations} />);
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={locations}
+            setCurrentCity={() => { }}
+            />);
 
         const input = CitySearchComponent.getByRole('textbox');
         // Focus to show suggestions, then change value so the filter callback runs
@@ -151,8 +174,9 @@ describe('<CitySearch /> component', () => {
     // Ensure the branch where no allLocations is provided is covered:
     // typing should render only the 'See all cities' item (no matches)
     test('typing with no allLocations shows only "See all cities" item', () => {
-        // Rerender component without passing allLocations
-        CitySearchComponent.rerender(<CitySearch />);
+        // Rerender component WITHOUT passing allLocations to simulate missing prop
+        CitySearchComponent.rerender(<CitySearch setCurrentCity={() => { }} />);
+
         const input = CitySearchComponent.getByRole('textbox');
         fireEvent.focus(input);
         fireEvent.change(input, { target: { value: 'Berlin' } });
@@ -162,4 +186,27 @@ describe('<CitySearch /> component', () => {
         expect(items).toHaveLength(1);
         expect(items[0].textContent).toBe('See all cities');
     });
+
+});
+
+// Integration test suite for CitySearch component
+describe('<CitySearch /> integration', () => {
+
+    // Test case for rendering suggestions list when the app is rendered
+    test('renders a suggestions list when the app is rendered', async () => {
+        const user = userEvent.setup();
+        const AppComponent = render(<App />);
+        const AppDOM = AppComponent.container.firstChild;
+        const CitySearchDOM = AppDOM.querySelector('#city-search');
+        const cityTextBox = within(CitySearchDOM).queryByRole('textbox');
+
+        await user.click(cityTextBox);
+
+        const allEvents = await getEvents();
+        const allLocations = extractLocations(allEvents);
+     
+        const suggestionListItems = await within(CitySearchDOM).findAllByRole('listitem');
+        expect(suggestionListItems).toHaveLength(allLocations.length + 1);
+    });
+
 });

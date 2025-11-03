@@ -2,7 +2,18 @@
  * src/mock-data.js
  * Mock data for testing and development.
  * Contains a list of 43 sample events.
- */ 
+ * 
+ * Locations:
+ *  Berlin, Germany - 18 events,
+ *  London, UK - 19 events,
+ *  Santiago, Santiago Metropolitan Region, Chile - 1 event,
+ *  Cape Town, South Africa - 1 event,
+ *  New York, NY, USA - 1 event,
+ *  Sydney NSW, Australia - 1 event,
+ *  Mumbai, Maharashtra, India - 1 event,
+ *  Moscow, Russia - 1 event
+ *
+ */
 
 // --- Mock event data ---
 const mockEvents = [

@@ -6,12 +6,15 @@
 /* eslint-env jest */
 
 // --- Testing utilities ---
-import { render } from '@testing-library/react';
 import React from 'react';
+import { render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 // --- Local modules ---
 import App from './../App';
+import { getEvents } from '../api';
 
+// Unit test suite for the main <App /> component
 describe('<App /> component', () => {
     
     let AppDOM;
@@ -35,4 +38,35 @@ describe('<App /> component', () => {
         expect(AppDOM.querySelector('#number-of-events')).toBeInTheDocument();
     });
 
+});
+
+// Integration test suite for the main <App /> component
+describe('<App /> integration', () => {
+    // Test case for filtering events by selected city (Berlin)
+    test('renders a list of events matching the city selected by the user', async () => {
+        const user = userEvent.setup();
+        const AppComponent = render(<App />);
+        const AppDOM = AppComponent.container.firstChild;
+     
+        const CitySearchDOM = AppDOM.querySelector('#city-search');
+        const CitySearchInput = within(CitySearchDOM).queryByRole('textbox');
+     
+        await user.type(CitySearchInput, "Berlin");
+        const berlinSuggestionItem = within(CitySearchDOM).queryByText('Berlin, Germany');
+        await user.click(berlinSuggestionItem);
+     
+        const EventListDOM = AppDOM.querySelector('#event-list');
+        // Wait for the app to update after selecting a city (async fetch)
+        const allRenderedEventItems = await within(EventListDOM).findAllByRole('listitem');
+     
+        const allEvents = await getEvents();
+        const berlinEvents = allEvents.filter(
+          event => event.location === 'Berlin, Germany'
+        );
+     
+        expect(allRenderedEventItems.length).toBe(berlinEvents.length);
+        allRenderedEventItems.forEach(event => {
+            expect(event.textContent).toContain("Berlin, Germany");
+        });
+      });
 });

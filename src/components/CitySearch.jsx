@@ -4,13 +4,20 @@
  */
 
 // --- External libraries ---
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 // Simple presentational placeholder for city search UI
-const CitySearch = ({ allLocations }) => {
+const CitySearch = ({ allLocations , setCurrentCity }) => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+
+    // Update suggestions when allLocations prop changes
+    useEffect(() => {
+        // Ensure suggestions is always an array. If allLocations is undefined (component rendered without prop), 
+        // fall back to an empty array to avoid setting suggestions to undefined which causes .map() to throw.
+        setSuggestions(allLocations || []);
+    }, [JSON.stringify(allLocations)]);
 
     // Event handler for input changes
     const handleInputChanged = (event) => {
@@ -25,9 +32,15 @@ const CitySearch = ({ allLocations }) => {
 
     // Event handler for suggestion item click
     const handleItemClicked = (event) => {
-        const value = event.target.textContent;
+        // Use currentTarget to ensure we get the <li> text even when a nested element (e.g. <b>) was clicked.
+        const value = event.currentTarget.textContent;
         setQuery(value);
-        setShowSuggestions(false); // to hide the list
+        setShowSuggestions(false); // hide the list
+        // If parent passed a setter for current city, notify it with the
+        // full suggestion string (e.g. "Berlin, Germany").
+        if (typeof setCurrentCity === 'function') {
+            setCurrentCity(value);
+        }
     };
 
     return (
