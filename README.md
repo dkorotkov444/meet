@@ -13,9 +13,12 @@ Table of contents
 - [Summary](#summary)
 - [Usage (Quick start)](#usage-quick-start)
 - [Key Features](#key-features)
-- [User Stories](#user-stories)
-- [Scenarios](#scenarios)
 - [Notes](#notes)
+- [Authentication (Google OAuth)](#authentication-google-oauth)
+- [UX details](#ux-details)
+- [Testing & coverage (quick notes)](#testing--coverage-quick-notes)
+- [Scenarios](#scenarios)
+- [User Stories](#user-stories)
 - [Original README (template content)](#react--vite)
 
 Usage (Quick start)
@@ -46,32 +49,37 @@ Key Features
 5. Add an App Shortcut to the Home Screen
 6. Display Charts Visualizing Event Details
 
-User Stories
-------------
+Notes
+-----
 
-### Feature 1. Filter Events by City
+- The project is a React + Vite app. For local development, use the scripts in `package.json` (e.g., `npm install` then `npm run dev`).
+- Formatted user stories and scenarios are available in `docs/user-stories.md` and `docs/scenarios.md`.
 
-User story: As a user, I should be able to filter events by city, so that I can see a list of events taking place in that city.
+Authentication (Google OAuth)
 
-### Feature 2. Show/Hide Event Details
+The serverless handlers in `auth-server/` implement three small helpers used by the app:
 
-User story: As a user, I should be able to show or hide event details (date, time, description), so that I can quickly scan the list or view full information.
+- `getAuthURL` — returns the Google OAuth consent URL to start the sign-in flow and obtain an authorization code.
+- `getAccessToken` — exchanges the authorization code for a short-lived access token.
+- `getCalendarEvents` — calls Google Calendar with the access token and returns the user's events.
 
-### Feature 3. Specify Number of Events
+These handlers keep secrets server-side and enable a secure OAuth flow for fetching calendar data.
 
-User story: As a user, I should be able to set the maximum number of events displayed, so that I can control the list length and reduce scrolling.
+UX details
+----------
 
-### Feature 4. Use the App When Offline
+Event element (summary of behavior):
 
-User story: As a user, I should be able to view previously loaded event data while offline, so that I can access information without an internet connection.
+- Each event item shows the summary (title), start time (and timezone if available), and location in the collapsed state.
+- Clicking "show details" expands a small details area containing a short heading "About event:", a link "See details on Google Calendar" (uses `htmlLink`), and the event description.
+- The details panel is intentionally compact to make scanning the list easy.
 
-### Feature 5. Add an App Shortcut to the Home Screen
+Testing & coverage (quick notes)
+--------------------------------
 
-User story: As a mobile user, I should be able to add an app shortcut to my home screen, so that I can launch the application immediately.
-
-### Feature 6. Display Charts Visualizing Event Details
-
-User story: As a user or organizer, I should be able to view charts visualizing event statistics, so that I can gain high-level insights into performance at a glance.
+- Tests are written with Jest and React Testing Library (jsdom). Run with `npm test`.
+- Because jsdom does not implement actual browser navigation, tests mock or avoid real assignments to `window.location.href`. The auth/redirect flows in `getAccessToken` are tested by mocking URLSearchParams/localStorage and fetch responses.
+- For coverage: `npm test -- --coverage`.
 
 Scenarios
 ---------
@@ -186,21 +194,34 @@ Scenarios
 
 *Then* the system displays a chart (e.g., a bar chart) visualizing the count of upcoming events for each city.
 
-Notes
------
 
-- The project is a React + Vite app. For local development, use the scripts in `package.json` (e.g., `npm install` then `npm run dev`).
-- Formatted user stories and scenarios are available in `docs/user-stories.md` and `docs/scenarios.md`.
 
-## Authentication (Google OAuth)
+User Stories
+------------
 
-The serverless handlers in `auth-server/` implement three small helpers used by the app:
+### Feature 1. Filter Events by City
 
-- `getAuthURL` — returns the Google OAuth consent URL to start the sign-in flow and obtain an authorization code.
-- `getAccessToken` — exchanges the authorization code for a short-lived access token.
-- `getCalendarEvents` — calls Google Calendar with the access token and returns the user's events.
+User story: As a user, I should be able to filter events by city, so that I can see a list of events taking place in that city.
 
-These handlers keep secrets server-side and enable a secure OAuth flow for fetching calendar data.
+### Feature 2. Show/Hide Event Details
+
+User story: As a user, I should be able to show or hide event details (date, time, description), so that I can quickly scan the list or view full information.
+
+### Feature 3. Specify Number of Events
+
+User story: As a user, I should be able to set the maximum number of events displayed, so that I can control the list length and reduce scrolling.
+
+### Feature 4. Use the App When Offline
+
+User story: As a user, I should be able to view previously loaded event data while offline, so that I can access information without an internet connection.
+
+### Feature 5. Add an App Shortcut to the Home Screen
+
+User story: As a mobile user, I should be able to add an app shortcut to my home screen, so that I can launch the application immediately.
+
+### Feature 6. Display Charts Visualizing Event Details
+
+User story: As a user or organizer, I should be able to view charts visualizing event statistics, so that I can gain high-level insights into performance at a glance.
 
 # React + Vite
 
