@@ -23,25 +23,24 @@ const App = () => {
     const [allLocations, setAllLocations] = useState([]);
     const [currentCity, setCurrentCity] = useState("See all cities");
     
-    // Fetch events on component mount
+    // Fetch events when either the selected city or the desired number of events changes
     useEffect(() => {
-        fetchData();
-    }, [currentCity]);
+        const fetchData = async () => {
+            const allEvents = await getEvents();
+            const filteredEvents = currentCity === "See all cities" ?
+                allEvents :
+                allEvents.filter(event => event.location === currentCity)
+            setEvents(filteredEvents.slice(0, currentNOE));
+            setAllLocations(extractLocations(allEvents));
+        };
 
-    // Function to fetch events and update state
-    const fetchData = async () => {
-        const allEvents = await getEvents();
-        const filteredEvents = currentCity === "See all cities" ?
-            allEvents :
-            allEvents.filter(event => event.location === currentCity)
-        setEvents(filteredEvents.slice(0, currentNOE));
-        setAllLocations(extractLocations(allEvents));
-    };
+        fetchData();
+    }, [currentCity, currentNOE]);
 
     return (
         <div className='App'>
             <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
-            <NumberOfEvents />
+            <NumberOfEvents currentNOE={currentNOE} setCurrentNOE={setCurrentNOE} />
             <EventList events={events}/>
         </div>
     );

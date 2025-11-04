@@ -3,13 +3,27 @@
  * Small controlled component that allows the user to specify how many events to show.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const NumberOfEvents = () => {
-    // Controlled input value; default is '32' per requirements/tests
-    const [value, setValue] = useState('32');
+// The component keeps a local input state so it can be rendered standalone in
+// unit tests, but it also notifies the parent App of changes via
+// `setCurrentNOE` when provided.
+const NumberOfEvents = ({ currentNOE = 32, setCurrentNOE = () => {} }) => {
+    const [value, setValue] = useState(String(currentNOE));
 
-    const handleChange = (e) => setValue(e.target.value);
+    // Keep local input in sync when parent updates the current number
+    useEffect(() => {
+        setValue(String(currentNOE));
+    }, [currentNOE]);
+
+    const handleChange = (e) => {
+        const next = e.target.value;
+        setValue(next);
+        const num = Number(next);
+        if (!Number.isNaN(num)) {
+            setCurrentNOE(num);
+        }
+    };
 
     return (
         <div>

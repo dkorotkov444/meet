@@ -6,10 +6,12 @@
 /* eslint-env jest */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import NumberOfEvents from '../components/NumberOfEvents';
+import App from '../App';
 
+// Unit test suite for <NumberOfEvents /> component
 describe('<NumberOfEvents /> component', () => {
     let input;
     let renderResult;
@@ -46,5 +48,29 @@ describe('<NumberOfEvents /> component', () => {
         // Simulate clearing the default '32' and typing '10'
         await userEvent.type(input, '{backspace}{backspace}10');
         expect(input.value).toBe('10');
+    });
+});
+
+// Integration test suite for <NumberOfEvents /> component
+describe('<NumberOfEvents /> integration', () => {
+
+    // Integration test: App + NumberOfEvents + EventList
+    // Test case: changing number of events updates input value and rendered events
+    test('when the user changes the number of events in the input, the number of rendered events changes accordingly', async () => {
+        // Render the full App so components are wired together
+        const { container } = render(<App />);
+
+        // Wait for events to be loaded and rendered
+        await waitFor(() => expect(container.querySelectorAll('.event').length).toBeGreaterThan(0));
+
+        // Find the NumberOfEvents input (has id 'number-of-events' and default value '32')
+        const numberInput = container.querySelector('#number-of-events');
+        expect(numberInput).toBeInTheDocument();
+
+        // Clear default '32' and type '6' (backspace twice to remove '3' and '2')
+        await userEvent.type(numberInput, '{backspace}{backspace}6');
+
+        // Assert that the number of rendered events changes to 6
+        await waitFor(() => expect(container.querySelectorAll('.event').length).toBe(6));
     });
 });
