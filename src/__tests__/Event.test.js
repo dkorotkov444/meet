@@ -39,6 +39,27 @@ describe('<Event /> component', () => {
 			expect(queryByText(startText)).toBeInTheDocument();
 		});
 
+		// Additional tests to cover both branches of the event start rendering logic
+		test('renders event start when start.dateTime is present (object)', () => {
+			const ev = {
+				summary: 'React is Fun',
+				start: { dateTime: '2020-05-20T14:00:00+02:00' },
+				location: 'Berlin, Germany',
+			};
+			const { queryByText: q } = render(<Event event={ev} />);
+			expect(q('2020-05-20T14:00:00+02:00')).toBeInTheDocument();
+		});
+
+		test('renders event start when start is a string (fallback)', () => {
+			const ev = {
+				summary: 'Local meetup',
+				start: '2020-05-20',
+				location: 'London, UK',
+			};
+			const { queryByText: q } = render(<Event event={ev} />);
+			expect(q('2020-05-20')).toBeInTheDocument();
+		});
+
 		// Test case for rendering event location
 		test('renders event location', () => {
 			expect(queryByText(event.location)).toBeInTheDocument();
