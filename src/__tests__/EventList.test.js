@@ -18,6 +18,11 @@ import { getEvents } from '../api';
 describe('<EventList /> component', () => {
 
     let EventListComponent;
+    let allEvents;
+    // Fetch events once for the suite to avoid repeated network calls
+    beforeAll(async () => {
+        allEvents = await getEvents();
+    });
     beforeEach(() => {
         EventListComponent = render(<EventList />);
     });
@@ -29,7 +34,6 @@ describe('<EventList /> component', () => {
 
     // Test case for rendering correct number of events
     test('renders correct number of events', async() => {
-        const allEvents = await getEvents(); 
         EventListComponent.rerender(<EventList events={ allEvents } />);
         expect(EventListComponent.getAllByRole("listitem")).toHaveLength(allEvents.length);
     });

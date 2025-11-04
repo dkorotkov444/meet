@@ -19,9 +19,11 @@ const NumberOfEvents = ({ currentNOE = 32, setCurrentNOE = () => {} }) => {
     const handleChange = (e) => {
         const next = e.target.value;
         setValue(next);
-        const num = Number(next);
-        if (!Number.isNaN(num)) {
-            setCurrentNOE(num);
+        // Only notify parent when the input contains only digits.
+        // This prevents transient values like '' (empty string -> Number('') === 0)
+        // or values like '1a' from triggering updates.
+        if (/^\d+$/.test(next)) {
+            setCurrentNOE(Number(next));
         }
     };
 

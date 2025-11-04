@@ -49,6 +49,28 @@ describe('<NumberOfEvents /> component', () => {
         await userEvent.type(input, '{backspace}{backspace}10');
         expect(input.value).toBe('10');
     });
+
+    // Test case: notifies parent when a numeric value is entered
+    test('calls setCurrentNOE prop when user types a numeric value', async () => {
+        const mockSet = jest.fn();
+        // Rerender into the existing test container so queries remain scoped
+        renderResult.rerender(<NumberOfEvents setCurrentNOE={mockSet} />);
+        const numInput = renderResult.getByRole('textbox');
+        await userEvent.type(numInput, '{backspace}{backspace}10');
+        // setCurrentNOE should be called with number 10
+        expect(mockSet).toHaveBeenCalledWith(10);
+    });
+
+    // Test case: does not call setCurrentNOE for non-numeric input
+    test('does not call setCurrentNOE when input is non-numeric', async () => {
+        const mockSet = jest.fn();
+        renderResult.rerender(<NumberOfEvents setCurrentNOE={mockSet} />);
+        const numInput = renderResult.getByRole('textbox');
+        // Clear the input first to avoid transient numeric states from backspaces
+        await userEvent.clear(numInput);
+        await userEvent.type(numInput, 'ab');
+        expect(mockSet).not.toHaveBeenCalled();
+    });
 });
 
 // Integration test suite for <NumberOfEvents /> component
