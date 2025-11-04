@@ -29,6 +29,8 @@ const NumberOfEvents = ({ currentNOE = 32, setCurrentNOE = () => {} }) => {
 
     return (
         <div>
+            {/* Label above the input (normal text) */}
+            <label htmlFor="number-of-events" className="noe-label">Number of events</label>
             {/* The input has id 'number-of-events' so App-level tests can query it */}
             <input
                 id="number-of-events"
