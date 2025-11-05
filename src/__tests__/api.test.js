@@ -77,5 +77,7 @@ describe('src/api.js: ', () => {
         // getEvents is a function here.
         expect(typeof api.getEvents).toBe('function');
     });
-
 });
+
+
+

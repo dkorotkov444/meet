@@ -42,7 +42,7 @@
 
 *When* the user clicks the expand control for that event
 
-*Then* the event details (date, time, description) are shown
+*Then* the event details (Google Calendar link, description) are shown
 
 ### Scenario 3. User can collapse an event to hide details.
 

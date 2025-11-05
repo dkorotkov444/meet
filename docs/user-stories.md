@@ -8,7 +8,7 @@ User story: As a user, I should be able to filter events by city, so that I can 
 
 ## Feature 2. Show/Hide Event Details
 
-User story: As a user, I should be able to show or hide event details (date, time, description), so that I can quickly scan the list or view full information.
+User story: As a user, I should be able to show or hide event details (Google Calendar link, description), so that I can quickly scan the list or view full information.
 
 ## Feature 3. Specify Number of Events
 
