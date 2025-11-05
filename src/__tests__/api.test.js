@@ -50,9 +50,12 @@ describe('src/api.js: ', () => {
     test('getAccessToken redirects to authUrl when no token and no code in URL', async () => {
         // ensure no token
         localStorage.removeItem('access_token');
-        // This test would cause a navigation assignment in jsdom which is not
-        // implemented. The redirect behavior is validated in manual and e2e tests.
-        expect(true).toBe(true);
+        // mock the get-auth-url response
+        global.fetch.mockResolvedValueOnce({ json: async () => ({ authUrl: 'https://auth.example.com' }) });
+
+        const result = await api.getAccessToken();
+        // getAccessToken returns the assigned href (authUrl)
+        expect(result).toBe('https://auth.example.com');
     });
 
     test('getAccessToken exchanges code for token when code present in URL', async () => {
@@ -70,14 +73,9 @@ describe('src/api.js: ', () => {
 
         URLSearchParamsSpy.mockRestore();
     });
-
-    test('getEvents calls getAccessToken and returns events when not localhost', async () => {
-        // This behavior is exercised by integration tests (App -> getEvents). To
-        // avoid manipulating jsdom location in unit tests we simply assert that
-        // getEvents is a function here.
-        expect(typeof api.getEvents).toBe('function');
-    });
+      
 });
+
 
 
 
