@@ -7,7 +7,7 @@
 import mockData from './mock-data.js';
 
 // Remove query parameters from the URL & clean up the history
-const removeQuery = () => {
+export const removeQuery = () => {
     let newurl;
     if (window.history.pushState && window.location.pathname) {
         newurl =
@@ -18,6 +18,8 @@ const removeQuery = () => {
         window.history.pushState("", "", newurl);
     } else {
         newurl = window.location.protocol + "//" + window.location.host;
+    // test-hook: mark that else-branch ran so tests/coverage can detect execution
+    window.__REMOVE_QUERY_ELSE = true;
         window.history.pushState("", "", newurl);
     }
 };
@@ -58,11 +60,18 @@ export const getAccessToken = async () => {
         );
         const result = await response.json();
         const { authUrl } = result;
-        return (window.location.href = authUrl);
+                // Use a small exported helper so navigation can be mocked in tests.
+                navigateTo(authUrl);
+                return authUrl;
       }
       return code && getToken(code);
     }
     return accessToken;
+};
+
+// Small navigation helper exported for easier testing (can be mocked)
+export const navigateTo = (url) => {
+        window.location.href = url;
 };
 
 // @param {*} events:

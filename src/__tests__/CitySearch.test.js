@@ -149,6 +149,98 @@ describe('<CitySearch /> component', () => {
         expect(CitySearchComponent.queryByRole('list')).not.toBeInTheDocument();
     });
 
+    // New test: selecting a suggestion via keyboard Enter should update the textbox and hide the list
+    test('selecting a suggestion with Enter key updates textbox and hides suggestions', async () => {
+        const user = userEvent.setup();
+
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={allLocations}
+            setCurrentCity={() => { }}
+            />);
+
+        const cityTextBox = CitySearchComponent.queryByRole('textbox');
+        // Type to filter suggestions
+        await user.type(cityTextBox, 'Berlin');
+
+        const suggestionItems = CitySearchComponent.queryAllByRole('listitem');
+        expect(suggestionItems.length).toBeGreaterThan(0);
+
+        // Focus the first suggestion and press Enter
+        suggestionItems[0].focus();
+        await user.keyboard('{Enter}');
+
+        // The textbox should be updated and suggestions hidden
+        expect(cityTextBox).toHaveValue(suggestionItems[0].textContent);
+        expect(CitySearchComponent.queryByRole('list')).not.toBeInTheDocument();
+    });
+
+    // New test: selecting a suggestion via Space key should update the textbox and hide the list
+    test('selecting a suggestion with Space key updates textbox and hides suggestions', async () => {
+        const user = userEvent.setup();
+
+        // Rerender component with dummy setCurrentCity prop
+        CitySearchComponent.rerender(<CitySearch
+            allLocations={allLocations}
+            setCurrentCity={() => { }}
+            />);
+
+        const cityTextBox = CitySearchComponent.queryByRole('textbox');
+        // Type to filter suggestions
+        await user.type(cityTextBox, 'Berlin');
+
+        const suggestionItems = CitySearchComponent.queryAllByRole('listitem');
+        expect(suggestionItems.length).toBeGreaterThan(0);
+
+    // Focus the first suggestion and press Space (send a literal space character)
+    suggestionItems[0].focus();
+    await user.keyboard(' ');
+
+        // The textbox should be updated and suggestions hidden
+        expect(cityTextBox).toHaveValue(suggestionItems[0].textContent);
+        expect(CitySearchComponent.queryByRole('list')).not.toBeInTheDocument();
+    });
+
+        // New test: pressing Enter on the "See all cities" item selects it and hides the list
+        test('pressing Enter on the "See all cities" item selects it and hides suggestions', async () => {
+            const user = userEvent.setup();
+
+            // Rerender component WITHOUT passing allLocations so only 'See all cities' is present
+            CitySearchComponent.rerender(<CitySearch setCurrentCity={() => { }} />);
+
+            const cityTextBox = CitySearchComponent.queryByRole('textbox');
+            // Focus to show suggestions
+            await user.click(cityTextBox);
+
+            const items = CitySearchComponent.queryAllByRole('listitem');
+            const seeAllItem = items[items.length - 1];
+
+            // Focus the 'See all cities' list item and activate with Enter
+            seeAllItem.focus();
+            await user.keyboard('{Enter}');
+
+            // textbox should contain "See all cities" and suggestions should be hidden
+            expect(cityTextBox).toHaveValue(seeAllItem.textContent);
+            expect(CitySearchComponent.queryByRole('list')).not.toBeInTheDocument();
+        });
+
+    // New test: clicking a suggestion should call setCurrentCity with the selected value
+    test('clicking a suggestion calls setCurrentCity with the suggestion text', async () => {
+        const user = userEvent.setup();
+        const mockSetCurrentCity = jest.fn();
+
+        // Rerender with the mock callback
+        CitySearchComponent.rerender(<CitySearch allLocations={allLocations} setCurrentCity={mockSetCurrentCity} />);
+
+        const cityTextBox = CitySearchComponent.queryByRole('textbox');
+        await user.type(cityTextBox, 'Berlin');
+
+        const firstSuggestion = CitySearchComponent.queryAllByRole('listitem')[0];
+        await user.click(firstSuggestion);
+
+        expect(mockSetCurrentCity).toHaveBeenCalledWith(firstSuggestion.textContent);
+    });
+
     // Small deterministic test to ensure the filter predicate is executed and to cover the branch that filters locations based on the input value.
     test('typing into textbox filters allLocations (direct filter predicate coverage)', () => {
         const locations = ['Berlin, Germany', 'London, UK'];
