@@ -27,3 +27,7 @@ dist-ssr
 # Testing
 src/assets/mock-data.json
 coverage
+
+# Selected documents
+docs/ci-cd.md
+docs/atatus-review.md
