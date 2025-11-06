@@ -39,10 +39,18 @@ const App = () => {
 
     return (
         <div className='App'>
-            <h1 className="app-title">Meet App</h1>
-            <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
-            <NumberOfEvents currentNOE={currentNOE} setCurrentNOE={setCurrentNOE} />
-            <EventList events={events}/>
+            {/* Skip link for keyboard users */}
+            <a className="skip-link" href="#main-content">Skip to content</a>
+
+            <header aria-label="App header">
+                <h1 className="app-title">Meet App</h1>
+                <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
+                <NumberOfEvents currentNOE={currentNOE} setCurrentNOE={setCurrentNOE} />
+            </header>
+
+            <main id="main-content" role="main">
+                <EventList events={events}/>
+            </main>
         </div>
     );
 };
