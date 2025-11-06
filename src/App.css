@@ -57,22 +57,13 @@ p {
   border: 1px solid #ddd;
 }
 
-/* Event list container */
+/* Event list container - single column, reasonably wide but not stretched */
 #event-list {
-  /* Make event list elements 60% of the available width and center them */
-  width: 60%;
-  max-width: 960px; /* keep a reasonable upper bound */
+  width: min(960px, 95vw);
+  max-width: 960px; /* constrain line length so items don't look too stretched */
   margin: 20px auto;
-  padding: 0 8px; /* small side padding inside container */
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  justify-items: stretch;
-}
-
-/* On small screens make the list take full width for usability */
-@media (max-width: 768px) {
-  #event-list { width: 95%; max-width: none; }
+  padding: 0 12px;
+  display: block; /* single column */
 }
 
 /* Event item internals */
@@ -175,11 +166,12 @@ p {
 }
 
 .suggestions {
-  width: 250px;
+  width: clamp(220px, 40vw, 380px);
   position: absolute;
   top: 45px;
   z-index: 2;
-  align-self: center;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   font-size: 14px;
   box-shadow: 10px 10px 16px -12px rgba(0, 0, 0, 0.75);
@@ -208,9 +200,32 @@ p {
   border: 1px solid #ccc;
   border-radius: 4px;
   position: relative;
-  /* Make list items stretch to the full width of the grid column */
-  width: 100%;
-  max-width: none;
+  background-color: #fff;
+  color: #111;
+}
+
+/* Skip link styles (visually hidden but visible on focus) */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus,
+.skip-link:active {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  background: #000;
+  color: #fff;
+  z-index: 9999;
+  border-radius: 4px;
+  text-decoration: none;
 }
 
 /* legacy .details-btn selector left out (covered by .details-toggle above) */

@@ -35,9 +35,12 @@ const NumberOfEvents = ({ currentNOE = 32, setCurrentNOE = () => {} }) => {
             <input
                 id="number-of-events"
                 role="textbox"
-                type="text"
+                type="number"
+                min="1"
+                max="250"
                 value={value}
                 onChange={handleChange}
+                aria-label="Number of events to show"
             />
         </div>
     );

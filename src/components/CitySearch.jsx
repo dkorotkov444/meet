@@ -44,19 +44,33 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
     };
 
     return (
-        <div id="city-search">
+        <div id="city-search" className="city-search" role="combobox"
+             aria-haspopup="listbox"
+             aria-owns="city-suggestion-list"
+             aria-expanded={showSuggestions}>
             <label htmlFor="city-input" className="city-label"><strong>Choose your nearest city</strong></label>
-            <input id="city-input" type="text" className="city" placeholder="Search for a city" 
+            <input id="city-input" type="text" className="city" placeholder="Search for a city"
                 value={query}
                 onFocus={() => setShowSuggestions(true)}
                 onChange={handleInputChanged}
+                aria-autocomplete="list"
+                aria-controls="city-suggestion-list"
             />
             {showSuggestions ? 
-                <ul className="suggestions">
+                <ul id="city-suggestion-list" className="suggestions">
                     {suggestions.map((suggestion) => {
-                        return <li onClick={handleItemClicked} key={suggestion}>{suggestion}</li>
+                        return (
+                            <li
+                                onClick={handleItemClicked}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleItemClicked(e); } }}
+                                tabIndex={0}
+                                key={suggestion}
+                            >
+                                {suggestion}
+                            </li>
+                        );
                     })}
-                    <li onClick={handleItemClicked} key='See all cities'>
+                    <li onClick={handleItemClicked} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleItemClicked(e); } }} tabIndex={0} key='See all cities'>
                         <b>See all cities</b>
                     </li>
                 </ul> : null}

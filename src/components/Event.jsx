@@ -13,11 +13,14 @@ const Event = ({ event }) => {
 
     const toggleDetails = () => setShowDetails((s) => !s);
 
+    // Build IDs used for aria-controls / aria-labelledby when event has an id
+    const detailsId = event && event.id ? `event-details-${event.id}` : undefined;
+
     // Render the event title and minimal fields. Details are hidden by default
     // and are toggled by the button. Button text matches test expectations.
     return (
-        <li className="event">
-            <h2 className="event-summary">{event && event.summary}</h2>
+        <li className="event" aria-labelledby={event && event.id ? `event-title-${event.id}` : undefined}>
+            <h2 id={event && event.id ? `event-title-${event.id}` : undefined} className="event-summary">{event && event.summary}</h2>
             {/* Minimal rendering of start time so the test can find the raw value */}
             <p className="event-start">
                 {event && (event.start && event.start.dateTime ? event.start.dateTime : event.start)}
@@ -28,18 +31,18 @@ const Event = ({ event }) => {
             {/* Minimal rendering of location so the test can assert on it */}
             <p className="event-location">{event && event.location}</p>
 
-            {/* Show/hide details control */}
-            <button className="details-toggle" onClick={toggleDetails}>
+            <button
+                className="details-toggle"
+                onClick={toggleDetails}
+                aria-expanded={showDetails}
+                aria-controls={detailsId}
+            >
                 {showDetails ? 'hide details' : 'show details'}
             </button>
 
             {/* Conditionally render details section (description) */}
             {showDetails && event && event.description ? (
-                <div className="event-details">
-                    {/* Preserve whitespace/newlines from the description so tests that
-                        match the raw string (including newlines) will find the text.
-                        This uses CSS pre-wrap to keep line breaks while still wrapping. */}
-                    {/* Small title above the details */}
+                <div id={detailsId} className="event-details" role="region" aria-labelledby={event && event.id ? `event-title-${event.id}` : undefined}>
                     <h3 className="about-title">About event:</h3>
                     {/* Link to Google Calendar event */}
                     {event.htmlLink ? (
