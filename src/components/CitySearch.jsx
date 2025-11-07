@@ -17,7 +17,7 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
         // Ensure suggestions is always an array. If allLocations is undefined (component rendered without prop), 
         // fall back to an empty array to avoid setting suggestions to undefined which causes .map() to throw.
         setSuggestions(allLocations || []);
-    }, [JSON.stringify(allLocations)]);
+    }, [allLocations]);
 
     // Event handler for input changes
     const handleInputChanged = (event) => {
