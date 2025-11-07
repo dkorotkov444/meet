@@ -174,7 +174,10 @@ p {
   transform: translateX(-50%);
   margin: 0;
   font-size: 14px;
-  box-shadow: 10px 10px 16px -12px rgba(0, 0, 0, 0.75);
+  /* more neutral, elevated shadow and subtle border to separate from dark cards */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--suggestion-border);
+  border-radius: 6px;
 }
 
 .suggestions > li {
