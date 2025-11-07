@@ -19,8 +19,8 @@
   --skip-text: #ffffff;
   /* suggestion dropdown colors (overrides in light mode below) */
   --suggestion-bg: #343434;
-  /* Brighter blue tint on hover in dark mode for higher visibility */
-  --suggestion-hover: rgba(131,166,255,0.28);
+  /* Brighter solid blue on hover in dark mode to avoid showing underlying elements through transparency */
+  --suggestion-hover: #2f4bd6;
   /* a light translucent border to separate dropdown from cards in dark mode */
   --suggestion-border: rgba(255,255,255,0.06);
 
