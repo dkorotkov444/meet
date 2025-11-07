@@ -7,7 +7,9 @@
 import React, {useState, useEffect} from 'react';
 
 // Simple presentational placeholder for city search UI
-const CitySearch = ({ allLocations , setCurrentCity, setInfoAlert }) => {
+// Callback props default to no-op functions so the component can be
+// rendered standalone in tests without additional guards.
+const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
@@ -35,8 +37,8 @@ const CitySearch = ({ allLocations , setCurrentCity, setInfoAlert }) => {
         } else {
             infoText = ""
         }
-        // Only call setInfoAlert if parent provided it as a function (some tests render
-        // CitySearch without that prop and would otherwise throw a TypeError).
+        // Only call setInfoAlert if parent provided it as a function (keeps defensive
+        // behavior for tests that may render the component without that prop).
         if (typeof setInfoAlert === 'function') {
             setInfoAlert(infoText);
         }
@@ -48,11 +50,10 @@ const CitySearch = ({ allLocations , setCurrentCity, setInfoAlert }) => {
         const value = event.currentTarget.textContent;
         setQuery(value);
         setShowSuggestions(false); // hide the list
-        // If parent passed a setter for current city, notify it with the
-        // full suggestion string (e.g. "Berlin, Germany").
+        // Only notify parent if parent provided the callbacks as functions.
         if (typeof setCurrentCity === 'function') {
             setCurrentCity(value);
-        };
+        }
         if (typeof setInfoAlert === 'function') {
             setInfoAlert("");
         }

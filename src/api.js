@@ -86,19 +86,15 @@ export const getEvents = async () => {
     }
     // Fetch or obtain an OAuth access token.
     const token = await getAccessToken();
-    if (token) {
-        return fetchEventsWithToken(token);
-    }
-};
 
-// Separated helper so the token-based fetch logic can be tested in isolation.
-const fetchEventsWithToken = async (token) => {
-    // Remove the query parameters from the URL
-    removeQuery();
-    const url = "https://znw1gon93l.execute-api.eu-central-1.amazonaws.com/dev/api/calendar-events" + "/" + token;
-    const response = await fetch(url);
-    const result = await response.json();
-    if (result) {
-        return result.events;
-    } else return null;
+    if (token) {
+        // Remove the query parameters from the URL
+        removeQuery();
+        const url = "https://znw1gon93l.execute-api.eu-central-1.amazonaws.com/dev/api/calendar-events" + "/" + token;
+        const response = await fetch(url);
+        const result = await response.json();
+        if (result) {
+            return result.events;
+        } else return null;
+    }
 };

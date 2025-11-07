@@ -11,7 +11,7 @@ import CitySearch from './components/CitySearch';
 import NumberOfEvents from './components/NumberOfEvents';
 import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
-import { InfoAlert } from './components/Alert';
+import { InfoAlert, WarningAlert, ErrorAlert } from './components/Alert';
 
 // --- Styles ---
 import './App.css';
@@ -24,7 +24,9 @@ const App = () => {
     const [allLocations, setAllLocations] = useState([]);
     const [currentCity, setCurrentCity] = useState("See all cities");
     const [infoAlert, setInfoAlert] = useState("");
-    
+    //const [warningAlert, setWarningAlert] = useState("");
+    const [errorAlert, setErrorAlert] = useState("");
+
     // Fetch events when either the selected city or the desired number of events changes
     useEffect(() => {
         const fetchData = async () => {
@@ -46,6 +48,7 @@ const App = () => {
 
             <div className="alerts-container">
                 {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
+                {errorAlert.length ? <ErrorAlert text={errorAlert}/> : null}
             </div>
 
             <header aria-label="App header">
@@ -56,7 +59,8 @@ const App = () => {
                     setInfoAlert={setInfoAlert}/>
                 <NumberOfEvents 
                     currentNOE={currentNOE} 
-                    setCurrentNOE={setCurrentNOE} />
+                    setCurrentNOE={setCurrentNOE}
+                    setErrorAlert={setErrorAlert} />
             </header>
 
             <main id="main-content" role="main">
