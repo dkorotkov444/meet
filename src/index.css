@@ -3,9 +3,27 @@
   line-height: 1.5;
   font-weight: 400;
 
+  /* Theme variables - use these in component CSS to centralize color tuning */
+  --bg: #242424;
+  --text: rgba(255, 255, 255, 0.87);
+  /* make muted slightly darker to meet contrast on light backgrounds (WCAG >= 4.5) */
+  --muted: #6b6b6b;
+  /* dark-mode sensible defaults */
+  --muted: #bdbdbd;
+  /* dark-mode accent (slightly lighter blue for visibility on dark cards/background) */
+  --accent: #83a6ff;
+  --card-bg: #2b2b2b;
+  --button-bg: #1a1a1a;
+  --button-text: #ffffff;
+  --skip-bg: #000000;
+  --skip-text: #ffffff;
+  /* suggestion dropdown colors (overrides in light mode below) */
+  --suggestion-bg: #2b2b2b;
+  --suggestion-hover: #3a3a3a;
+
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +33,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--accent);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #6b8cff;
 }
 
 body {
@@ -56,8 +74,23 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Light theme overrides for variables */
+    --bg: #ffffff;
+    --text: #213547;
+    --muted: #6b6b6b;
+  /* use a bluer accent in light mode for links like Google Calendar */
+  --accent: #1a73e8;
+    --card-bg: #ffffff;
+    --button-bg: #f9f9f9;
+    --button-text: #000000;
+    --skip-bg: #ffffff;
+    --skip-text: #000000;
+      /* light-theme suggestion colors (match previous values) */
+      --suggestion-bg: #eee;
+      --suggestion-hover: #bcdcdb;
+
+    color: var(--text);
+    background-color: var(--bg);
   }
   a:hover {
     color: #747bff;
