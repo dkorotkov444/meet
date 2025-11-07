@@ -46,7 +46,7 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
     return (
         <div id="city-search" className="city-search" role="combobox"
              aria-haspopup="listbox"
-             aria-owns="city-suggestion-list"
+             aria-owns={showSuggestions ? 'city-suggestion-list' : undefined}
              aria-expanded={showSuggestions}>
             <label htmlFor="city-input" className="city-label"><strong>Choose your nearest city</strong></label>
             <input id="city-input" type="text" className="city" placeholder="Search for a city"
@@ -54,9 +54,9 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
                 onFocus={() => setShowSuggestions(true)}
                 onChange={handleInputChanged}
                 aria-autocomplete="list"
-                aria-controls="city-suggestion-list"
+                aria-controls={showSuggestions ? 'city-suggestion-list' : undefined}
             />
-            {showSuggestions ? 
+            {showSuggestions ? (
                 <ul id="city-suggestion-list" className="suggestions">
                     {suggestions.map((suggestion) => {
                         return (
@@ -73,7 +73,8 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
                     <li onClick={handleItemClicked} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleItemClicked(e); } }} tabIndex={0} key='See all cities'>
                         <b>See all cities</b>
                     </li>
-                </ul> : null}
+                </ul>
+            ) : null}
         </div>
     );
 };

@@ -34,7 +34,7 @@ const NumberOfEvents = ({ currentNOE = 32, setCurrentNOE = () => {} }) => {
             {/* The input has id 'number-of-events' so App-level tests can query it */}
             <input
                 id="number-of-events"
-                role="textbox"
+                role="spinbutton"
                 type="number"
                 min="1"
                 max="250"

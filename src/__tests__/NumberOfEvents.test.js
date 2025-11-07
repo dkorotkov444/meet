@@ -25,7 +25,7 @@ describe('<NumberOfEvents /> component', () => {
     // Render a fresh component before each test and expose helpers
     beforeEach(() => {
         renderResult = render(<NumberOfEvents />);
-        input = renderResult.getByRole('textbox');
+        input = renderResult.getByRole('spinbutton');
     });
 
     // Test case: component contains a textbox input
@@ -55,7 +55,7 @@ describe('<NumberOfEvents /> component', () => {
         const mockSet = jest.fn();
         // Rerender into the existing test container so queries remain scoped
         renderResult.rerender(<NumberOfEvents setCurrentNOE={mockSet} />);
-        const numInput = renderResult.getByRole('textbox');
+    const numInput = renderResult.getByRole('spinbutton');
         await userEvent.type(numInput, '{backspace}{backspace}10');
         // setCurrentNOE should be called with number 10
         expect(mockSet).toHaveBeenCalledWith(10);
@@ -65,7 +65,7 @@ describe('<NumberOfEvents /> component', () => {
     test('does not call setCurrentNOE when input is non-numeric', async () => {
         const mockSet = jest.fn();
         renderResult.rerender(<NumberOfEvents setCurrentNOE={mockSet} />);
-        const numInput = renderResult.getByRole('textbox');
+    const numInput = renderResult.getByRole('spinbutton');
         // Clear the input first to avoid transient numeric states from backspaces
         await userEvent.clear(numInput);
         await userEvent.type(numInput, 'ab');
