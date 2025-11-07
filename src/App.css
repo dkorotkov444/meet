@@ -241,3 +241,11 @@ p {
 a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 3px solid var(--accent);
 }
+
+.alerts-container {
+    position: fixed;
+    top: 0px;
+    left: 20px;
+    width: 250px;
+    z-index: 1000;
+   }

@@ -7,7 +7,7 @@
 import React, {useState, useEffect} from 'react';
 
 // Simple presentational placeholder for city search UI
-const CitySearch = ({ allLocations , setCurrentCity }) => {
+const CitySearch = ({ allLocations , setCurrentCity, setInfoAlert }) => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
@@ -28,6 +28,18 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
         // Update state with new query and suggestions
         setQuery(value);
         setSuggestions(filteredLocations);
+
+        let infoText;
+        if (filteredLocations.length === 0) {
+            infoText = `We can not find the city "${value}" you are looking for. Please try another city`
+        } else {
+            infoText = ""
+        }
+        // Only call setInfoAlert if parent provided it as a function (some tests render
+        // CitySearch without that prop and would otherwise throw a TypeError).
+        if (typeof setInfoAlert === 'function') {
+            setInfoAlert(infoText);
+        }
     };
 
     // Event handler for suggestion item click
@@ -40,6 +52,9 @@ const CitySearch = ({ allLocations , setCurrentCity }) => {
         // full suggestion string (e.g. "Berlin, Germany").
         if (typeof setCurrentCity === 'function') {
             setCurrentCity(value);
+        };
+        if (typeof setInfoAlert === 'function') {
+            setInfoAlert("");
         }
     };
 

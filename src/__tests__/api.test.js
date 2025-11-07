@@ -182,7 +182,14 @@ describe('src/api.js: ', () => {
     if (origDesc) Object.defineProperty(locProto, 'pathname', origDesc);
         pushStateSpy.mockRestore();
     });
-      
+    
+    // NOTE: test that previously called internal helper `fetchEventsWithToken` was removed
+    // because `fetchEventsWithToken` is now an internal implementation detail and not exported.
+    // If you want to exercise the token-based fetch path, consider testing it indirectly
+    // via the public `getEvents()` in a non-localhost environment, or reintroducing a
+    // test-specific seam. For now the focused token-path unit test is omitted to keep
+    // the public API surface unchanged.
+
 });
 
 

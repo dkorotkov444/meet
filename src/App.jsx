@@ -11,6 +11,7 @@ import CitySearch from './components/CitySearch';
 import NumberOfEvents from './components/NumberOfEvents';
 import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
+import { InfoAlert } from './components/Alert';
 
 // --- Styles ---
 import './App.css';
@@ -22,6 +23,7 @@ const App = () => {
     const [currentNOE, setCurrentNOE] = useState(32);
     const [allLocations, setAllLocations] = useState([]);
     const [currentCity, setCurrentCity] = useState("See all cities");
+    const [infoAlert, setInfoAlert] = useState("");
     
     // Fetch events when either the selected city or the desired number of events changes
     useEffect(() => {
@@ -42,10 +44,19 @@ const App = () => {
             {/* Skip link for keyboard users */}
             <a className="skip-link" href="#main-content">Skip to content</a>
 
+            <div className="alerts-container">
+                {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
+            </div>
+
             <header aria-label="App header">
                 <h1 className="app-title">Meet App</h1>
-                <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
-                <NumberOfEvents currentNOE={currentNOE} setCurrentNOE={setCurrentNOE} />
+                <CitySearch 
+                    allLocations={allLocations} 
+                    setCurrentCity={setCurrentCity} 
+                    setInfoAlert={setInfoAlert}/>
+                <NumberOfEvents 
+                    currentNOE={currentNOE} 
+                    setCurrentNOE={setCurrentNOE} />
             </header>
 
             <main id="main-content" role="main">

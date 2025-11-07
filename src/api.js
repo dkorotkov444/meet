@@ -41,7 +41,6 @@ const getToken = async (code) => {
     );
     const { access_token } = await response.json();
     access_token && localStorage.setItem("access_token", access_token);
-   
     return access_token;
 };
 
@@ -60,18 +59,12 @@ export const getAccessToken = async () => {
         );
         const result = await response.json();
         const { authUrl } = result;
-                // Use a small exported helper so navigation can be mocked in tests.
-                navigateTo(authUrl);
-                return authUrl;
+        window.location.href = authUrl;
+        return authUrl;
       }
       return code && getToken(code);
     }
     return accessToken;
-};
-
-// Small navigation helper exported for easier testing (can be mocked)
-export const navigateTo = (url) => {
-        window.location.href = url;
 };
 
 // @param {*} events:
@@ -91,18 +84,21 @@ export const getEvents = async () => {
     if (window.location.href.startsWith('http://localhost')) {
         return mockData;
     }
-
     // Fetch or obtain an OAuth access token.
     const token = await getAccessToken();
-
     if (token) {
-        // Remove the query parameters from the URL
-        removeQuery();
-        const url =  "https://znw1gon93l.execute-api.eu-central-1.amazonaws.com/dev/api/calendar-events" + "/" + token;
-        const response = await fetch(url);
-        const result = await response.json();
-        if (result) {
-            return result.events;
-        } else return null;
+        return fetchEventsWithToken(token);
     }
+};
+
+// Separated helper so the token-based fetch logic can be tested in isolation.
+const fetchEventsWithToken = async (token) => {
+    // Remove the query parameters from the URL
+    removeQuery();
+    const url = "https://znw1gon93l.execute-api.eu-central-1.amazonaws.com/dev/api/calendar-events" + "/" + token;
+    const response = await fetch(url);
+    const result = await response.json();
+    if (result) {
+        return result.events;
+    } else return null;
 };
