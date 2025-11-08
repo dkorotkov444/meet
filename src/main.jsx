@@ -7,6 +7,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as atatus from 'atatus-spa';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 // --- Styles ---
 import './index.css';
@@ -23,4 +24,4 @@ createRoot(document.getElementById('root')).render(
         <App />
     </StrictMode>
 );
-
+serviceWorkerRegistration.register();
