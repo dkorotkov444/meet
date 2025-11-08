@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "atatus-spa": "^4.7.0",
+    "nprogress": "^0.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "vite-plugin-pwa": "^1.1.0",
