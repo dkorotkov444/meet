@@ -24,7 +24,7 @@ const App = () => {
     const [allLocations, setAllLocations] = useState([]);
     const [currentCity, setCurrentCity] = useState("See all cities");
     const [infoAlert, setInfoAlert] = useState("");
-    //const [warningAlert, setWarningAlert] = useState("");
+    const [warningAlert, setWarningAlert] = useState("");
     const [errorAlert, setErrorAlert] = useState("");
 
     // Fetch events when either the selected city or the desired number of events changes
@@ -37,7 +37,12 @@ const App = () => {
             setEvents(filteredEvents.slice(0, currentNOE));
             setAllLocations(extractLocations(allEvents));
         };
-
+        // Check if the user is online or offline
+        if (navigator.onLine) {
+            setWarningAlert("");
+          } else {
+            setWarningAlert("You are currently offline. Some features may not be available.");
+          }
         fetchData();
     }, [currentCity, currentNOE]);
 
@@ -48,6 +53,7 @@ const App = () => {
 
             <div className="alerts-container">
                 {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
+                {warningAlert.length ? <WarningAlert text={warningAlert}/> : null}
                 {errorAlert.length ? <ErrorAlert text={errorAlert}/> : null}
             </div>
 
