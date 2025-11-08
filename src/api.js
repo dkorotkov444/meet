@@ -3,6 +3,8 @@
  * API interaction functions.
  */
 
+// --- External libraries ---
+import NProgress from 'nprogress';
 // --- Local modules ---
 import mockData from './mock-data.js';
 
@@ -80,10 +82,20 @@ export const extractLocations = (events) => {
 
 // Fetch the list of all events
 export const getEvents = async () => {
+    NProgress.start(); // Show loading bar
     // If running on localhost, return mock data
     if (window.location.href.startsWith('http://localhost')) {
+        NProgress.done();   // Hide loading bar
         return mockData;
     }
+
+    // If offline, return cached events
+    if (!navigator.onLine) {
+        const events = localStorage.getItem("lastEvents");
+        NProgress.done();   // Hide loading bar
+        return events?JSON.parse(events):[];
+    }
+
     // Fetch or obtain an OAuth access token.
     const token = await getAccessToken();
 
@@ -94,6 +106,8 @@ export const getEvents = async () => {
         const response = await fetch(url);
         const result = await response.json();
         if (result) {
+            NProgress.done();   // Hide loading bar
+            localStorage.setItem("lastEvents", JSON.stringify(result.events)); // Save events to localStorage
             return result.events;
         } else return null;
     }
