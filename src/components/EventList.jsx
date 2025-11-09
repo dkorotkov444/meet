@@ -18,4 +18,4 @@ const EventList = ({ events }) => {
     );
 };
 
-export default EventList;
+export default EventList; 

@@ -5,7 +5,7 @@
 /* eslint-env jest */
 
 import * as api from '../api';
-import mockData from '../mock-data';
+import mockEvents from '../mock-data';
 
 // Unit test suite for `src/api.js`
 describe('src/api.js: ', () => {
@@ -31,7 +31,7 @@ describe('src/api.js: ', () => {
         expect(locations).toEqual(['Berlin', 'Munich']);
     });
 
-    test('getEvents returns mockData when running on localhost', async () => {
+    test('getEvents returns mockEvents when running on localhost', async () => {
         // Skip: environment-specific; default jsdom location can vary. This behavior
         // is covered by higher-level integration tests that render the App.
         expect(true).toBe(true);
@@ -75,14 +75,14 @@ describe('src/api.js: ', () => {
 
         const events = await api.getEvents();
         // In jsdom test environment the default URL may be localhost which
-        // causes getEvents to return mockData early — accept either outcome.
+        // causes getEvents to return mockEvents early — accept either outcome.
         if (pushStateSpy.mock.calls.length > 0) {
             expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/dev/api/calendar-events'));
             expect(Array.isArray(events)).toBe(true);
             expect(events[0].id).toBe(10);
         } else {
-            // Localhost short-circuit: getEvents returns mockData
-            expect(events).toBe(mockData);
+            // Localhost short-circuit: getEvents returns mockEvents
+            expect(events).toBe(mockEvents);
         }
 
         pushStateSpy.mockRestore();
@@ -115,9 +115,9 @@ describe('src/api.js: ', () => {
         global.fetch = jest.fn().mockResolvedValueOnce({ json: async () => null });
 
         const result = await api.getEvents();
-        // If test runs on localhost, getEvents returns mockData; otherwise it should return null
-        if (result === mockData) {
-            expect(result).toBe(mockData);
+        // If test runs on localhost, getEvents returns mockEvents; otherwise it should return null
+        if (result === mockEvents) {
+            expect(result).toBe(mockEvents);
         } else {
             expect(result).toBeNull();
         }
@@ -182,13 +182,66 @@ describe('src/api.js: ', () => {
     if (origDesc) Object.defineProperty(locProto, 'pathname', origDesc);
         pushStateSpy.mockRestore();
     });
-    
-    // NOTE: test that previously called internal helper `fetchEventsWithToken` was removed
-    // because `fetchEventsWithToken` is now an internal implementation detail and not exported.
-    // If you want to exercise the token-based fetch path, consider testing it indirectly
-    // via the public `getEvents()` in a non-localhost environment, or reintroducing a
-    // test-specific seam. For now the focused token-path unit test is omitted to keep
-    // the public API surface unchanged.
+
+    test('getEvents returns cached events when offline (robust)', async () => {
+        // Ensure getEvents does not short-circuit to localhost by stubbing
+        // String.prototype.startsWith for the duration of this test.
+        const originalStartsWith = String.prototype.startsWith;
+        jest.spyOn(String.prototype, 'startsWith').mockImplementation(function (search, ...args) {
+            // If code checks for localhost, make it return false so offline branch runs
+            if (String(this) === window.location.href && String(search).startsWith('http://localhost')) {
+                return false;
+            }
+            return originalStartsWith.apply(this, [search, ...args]);
+        });
+
+        // Simulate offline environment
+        const originalOnline = window.navigator.onLine;
+        Object.defineProperty(window.navigator, 'onLine', { value: false, configurable: true });
+
+        const cached = [{ id: 123, location: 'Test City' }];
+        localStorage.setItem('lastEvents', JSON.stringify(cached));
+
+        const result = await api.getEvents();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toEqual(cached);
+
+        // restore navigator and startsWith
+        Object.defineProperty(window.navigator, 'onLine', { value: originalOnline, configurable: true });
+        String.prototype.startsWith.mockRestore();
+    });
+
+    test('getEvents fetches events and stores them when token present', async () => {
+        // Ensure getEvents does not short-circuit to localhost by stubbing startsWith
+        const originalStartsWith = String.prototype.startsWith;
+        jest.spyOn(String.prototype, 'startsWith').mockImplementation(function (search, ...args) {
+            if (String(this) === window.location.href && String(search).startsWith('http://localhost')) {
+                return false;
+            }
+            return originalStartsWith.apply(this, [search, ...args]);
+        });
+
+        // Simulate a stored, valid token so getAccessToken returns it without
+        // following the auth-url flow. getAccessToken checks token validity by
+        // calling the tokeninfo endpoint first, so mock fetch twice: first for
+        // token check, second for calendar-events.
+        localStorage.setItem('access_token', 'TEST_TOKEN');
+
+        const fetchedEvents = [{ id: 999, location: 'Fetched City' }];
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({ json: async () => ({}) }) // tokeninfo check -> no error
+            .mockResolvedValueOnce({ json: async () => ({ events: fetchedEvents }) });
+
+        // Ensure no cached events initially
+        localStorage.removeItem('lastEvents');
+
+        const result = await api.getEvents();
+
+        expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/dev/api/calendar-events'));
+        expect(result).toEqual(fetchedEvents);
+        expect(JSON.parse(localStorage.getItem('lastEvents'))).toEqual(fetchedEvents);
+        String.prototype.startsWith.mockRestore();
+    });
 
 });
 

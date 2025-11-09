@@ -38,6 +38,17 @@ describe('<App /> component', () => {
         expect(AppDOM.querySelector('#number-of-events')).toBeInTheDocument();
     });
 
+    // Very small unit test for offline warning (line 45 in App.jsx)
+    test('shows offline warning when navigator is offline', () => {
+        const originalOnline = window.navigator.onLine;
+        // Set navigator to offline for this render
+        Object.defineProperty(window.navigator, 'onLine', { value: false, configurable: true });
+        const { getByText } = render(<App />);
+        expect(getByText('You are currently offline. Some features may not be available.')).toBeInTheDocument();
+        // restore original value
+        Object.defineProperty(window.navigator, 'onLine', { value: originalOnline, configurable: true });
+    });
+
 });
 
 // Integration test suite for the main <App /> component

@@ -6,7 +6,7 @@
 // --- External libraries ---
 import NProgress from 'nprogress';
 // --- Local modules ---
-import mockData from './mock-data.js';
+import mockEvents from './mock-data.js';
 
 // Remove query parameters from the URL & clean up the history
 export const removeQuery = () => {
@@ -86,7 +86,7 @@ export const getEvents = async () => {
     // If running on localhost, return mock data
     if (window.location.href.startsWith('http://localhost')) {
         NProgress.done();   // Hide loading bar
-        return mockData;
+        return mockEvents;
     }
 
     // If offline, return cached events

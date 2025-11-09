@@ -4,7 +4,7 @@ import { loadFeature, defineFeature } from 'jest-cucumber';
 import { render, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
-import mockData from '../mock-data';
+import mockEvents from '../mock-data';
 
 const feature = loadFeature('./src/features/showHideAnEventsDetails.feature');
 
@@ -33,7 +33,7 @@ defineFeature(feature, test => {
                 expect(btn.textContent).toBe('show details');
 
                 // collapsed view shows title, start time (with timezone) and location
-                const sample = mockData[0];
+                const sample = mockEvents[0];
                 expect(within(firstEvent).getByText(sample.summary)).toBeTruthy();
                 const startText = sample.start.dateTime || sample.start;
                 expect(within(firstEvent).getByText(startText)).toBeTruthy();
@@ -76,7 +76,7 @@ defineFeature(feature, test => {
             const link = within(firstEvent).getByRole('link', { name: /see details on google calendar/i });
             expect(link).toBeTruthy();
             // link href and description should match the event data
-            const sample = mockData[0];
+            const sample = mockEvents[0];
             expect(link.getAttribute('href')).toBe(sample.htmlLink);
             expect(within(firstEvent).getByText(sample.description)).toBeTruthy();
             const btn = within(firstEvent).getByRole('button');
