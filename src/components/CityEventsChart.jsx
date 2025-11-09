@@ -3,23 +3,19 @@
 import React , {useState, useEffect} from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const CityEventsChart = ({ allLocations, events }) => {
+const CityEventsChart = ({ allLocations, allEvents }) => {
     const [data, setData] = useState([]);
 
-    // Update chart data when events change
+    // Update chart data when the full events dataset or locations change
     useEffect(() => {
-        setData(getData());
-    }, [`${events}`]);
-  
-    // Prepare data for the scatter chart
-    const getData = () => {
-        const data = allLocations.map((location) => {
-            const count = events.filter((event) => event.location === location).length;
-            const city = location.split((/, | - /))[0];
+        // Prepare data for the scatter chart using the full dataset
+        const chartData = allLocations.map((location) => {
+            const count = allEvents.filter((event) => event.location === location).length;
+            const city = location.split(/,| - /)[0].trim();
             return { city, count };
-        })
-        return data;
-    };
+        });
+        setData(chartData);
+    }, [allEvents, allLocations]);
 
     // Render the scatter chart
     return (
