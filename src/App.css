@@ -251,19 +251,19 @@ a:focus-visible, button:focus-visible, input:focus-visible {
    }
 
 /* Chart layout: show two charts side-by-side on wide viewports, stack on narrow screens */
-.chart-container {
-  display: flex;
+.charts-container {
+  /* Use CSS Grid to lay out two charts side-by-side */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two equal-width columns */
   gap: 20px;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: start;
+  justify-items: center;
   width: 100%;
   margin-top: 12px;
-  /* Force two panels side-by-side on wide screens */
-  flex-wrap: nowrap;
 }
 .chart-panel {
-  /* make each panel take half available width on larger screens */
-  width: 50%;
+  /* each panel fills its grid cell; constrain width for very large screens */
+  width: 100%;
   max-width: 720px;
   padding: 8px;
 }
@@ -275,10 +275,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 /* Stack charts vertically on narrower viewports */
-@media (max-width: 900px) {
-  .chart-container {
-    flex-wrap: wrap;
-    flex-direction: column;
+@media (max-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr; /* single column on small screens */
     gap: 12px;
   }
   .chart-panel {

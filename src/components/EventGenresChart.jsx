@@ -22,12 +22,33 @@ const EventGenresChart = ({ allEvents }) => {
                 value: filteredEvents.length,
             };
         });
-        setData(chartData);
+        // Filter out zero-value slices so we don't render empty segments/labels
+        const nonZero = chartData.filter(item => item.value > 0);
+        setData(nonZero);
     }, [allEvents]);
+
+    // Customized label renderer: displays "Genre XX%" near each slice
+    const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
+        const RADIAN = Math.PI / 180;
+        const radius = outerRadius;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN) * 1.07;
+        const y = cy + radius * Math.sin(-midAngle * RADIAN) * 1.07;
+        return percent ? (
+            <text
+                x={x}
+                y={y}
+                fill="#8884d8"
+                textAnchor={x > cx ? 'start' : 'end'}
+                dominantBaseline="central"
+            >
+                {`${data[index] ? data[index].name : ''} ${(percent * 100).toFixed(0)}%`}
+            </text>
+        ) : null;
+    };
 
     return (
         <div>
-            <h2 className="chart-title">Event Genres Popularity</h2>
+            <h2 className="chart-title">Event Themes Popularity</h2>
             <ResponsiveContainer width="99%" height={400}>
                 <PieChart>
                     <Pie
@@ -35,8 +56,8 @@ const EventGenresChart = ({ allEvents }) => {
                         dataKey="value"
                         fill="#8884d8"
                         labelLine={false}
-                        label
-                        outerRadius={130}
+                        label={renderCustomizedLabel}
+                        outerRadius={150}
                     />
                 </PieChart>
             </ResponsiveContainer>

@@ -117,7 +117,7 @@ const App = () => {
 
             <main id="main-content" role="main">
 
-                <div className='chart-container'>
+                <div className='charts-container'>
                     <div className="chart-panel">
                         <EventGenresChart allEvents={allEvents} />
                     </div>
