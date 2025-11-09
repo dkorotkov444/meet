@@ -14,3 +14,21 @@ jest.spyOn(console, 'error').mockImplementation(noop);
 jest.spyOn(console, 'warn').mockImplementation(noop);
 
 jest.setTimeout(30000);
+
+const { ResizeObserver } = window;
+
+beforeEach(() => {
+  //@ts-ignore
+  delete window.ResizeObserver;
+  window.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+  }));
+});
+
+afterEach(() => {
+  window.ResizeObserver = ResizeObserver;
+  // Clear mock call history but keep spies (console.error/warn) active.
+  jest.clearAllMocks();
+});

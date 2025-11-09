@@ -12,6 +12,7 @@ import NumberOfEvents from './components/NumberOfEvents';
 import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
 import { InfoAlert, WarningAlert, ErrorAlert } from './components/Alert';
+import CityEventsChart from './components/CityEventsChart';
 
 // --- Styles ---
 import './App.css';
@@ -51,18 +52,20 @@ const App = () => {
             {/* Skip link for keyboard users */}
             <a className="skip-link" href="#main-content">Skip to content</a>
 
-            <div className="alerts-container">
-                {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
-                {warningAlert.length ? <WarningAlert text={warningAlert}/> : null}
-                {errorAlert.length ? <ErrorAlert text={errorAlert}/> : null}
-            </div>
-
             <header aria-label="App header">
                 <h1 className="app-title">Meet App</h1>
+
+                <div className="alerts-container">
+                    {infoAlert.length ? <InfoAlert text={infoAlert}/> : null}
+                    {warningAlert.length ? <WarningAlert text={warningAlert}/> : null}
+                    {errorAlert.length ? <ErrorAlert text={errorAlert}/> : null}
+                </div>
+
                 <CitySearch 
                     allLocations={allLocations} 
                     setCurrentCity={setCurrentCity} 
                     setInfoAlert={setInfoAlert}/>
+
                 <NumberOfEvents 
                     currentNOE={currentNOE} 
                     setCurrentNOE={setCurrentNOE}
@@ -70,6 +73,7 @@ const App = () => {
             </header>
 
             <main id="main-content" role="main">
+                <CityEventsChart allLocations={allLocations} events={events} />
                 <EventList events={events}/>
             </main>
         </div>
