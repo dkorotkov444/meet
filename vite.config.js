@@ -46,9 +46,12 @@ export default defineConfig({
         theme_color: "#000000",
         background_color: "#ffffff"
         },
-        srcDir: 'src', // Update if your service-worker.js is elsewhere
-        filename: 'service-worker.js', // Ensure it's accessible in production
-        registerType: 'autoUpdate',
+    srcDir: 'src', // Update if your service-worker.js is elsewhere
+    filename: 'service-worker.js', // Ensure it's accessible in production
+    // Disable automatic injection of the generated register script (registerSW.js)
+    // so we can register the service worker manually and handle errors.
+    injectRegister: false,
+    registerType: 'autoUpdate',
         workbox: {
             runtimeCaching: [
                 {
