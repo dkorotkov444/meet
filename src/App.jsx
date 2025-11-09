@@ -13,6 +13,7 @@ import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
 import { InfoAlert, WarningAlert, ErrorAlert } from './components/Alert';
 import CityEventsChart from './components/CityEventsChart';
+import EventGenresChart from './components/EventGenresChart';
 
 // --- Styles ---
 import './App.css';
@@ -117,7 +118,12 @@ const App = () => {
             <main id="main-content" role="main">
 
                 <div className='chart-container'>
-                    <CityEventsChart allLocations={allLocations} allEvents={allEvents} />
+                    <div className="chart-panel">
+                        <EventGenresChart allEvents={allEvents} />
+                    </div>
+                    <div className="chart-panel">
+                        <CityEventsChart allLocations={allLocations} allEvents={allEvents} />
+                    </div>
                 </div>
                 
                 <EventList events={events}/>

@@ -249,3 +249,40 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     width: 250px;
     z-index: 1000;
    }
+
+/* Chart layout: show two charts side-by-side on wide viewports, stack on narrow screens */
+.chart-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 12px;
+  /* Force two panels side-by-side on wide screens */
+  flex-wrap: nowrap;
+}
+.chart-panel {
+  /* make each panel take half available width on larger screens */
+  width: 50%;
+  max-width: 720px;
+  padding: 8px;
+}
+.chart-title {
+  margin: 6px 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Stack charts vertically on narrower viewports */
+@media (max-width: 900px) {
+  .chart-container {
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chart-panel {
+    width: 100%;
+    max-width: none;
+  }
+}
