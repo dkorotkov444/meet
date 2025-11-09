@@ -28,8 +28,8 @@ const CityEventsChart = ({ allLocations, events }) => {
             margin={{
             top: 20,
             right: 20,
-            bottom: 20,
-            left: 20,
+            bottom: 60,
+            left: -30,
             }}
         >
             <CartesianGrid />
