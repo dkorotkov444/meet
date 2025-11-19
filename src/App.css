@@ -274,6 +274,30 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   text-align: center;
 }
 
+/* Make Recharts axis labels and chart text follow the theme text color.
+   This brightens axis labels in dark mode (moves toward white) while keeping
+   correct coloring in light mode via the --text variable. */
+.recharts-cartesian-axis text,
+.recharts-legend text,
+.recharts-tooltip text,
+.recharts-text {
+  fill: var(--text) !important;
+  color: var(--text) !important;
+  opacity: 0.95;
+}
+
+/* Make axis labels a bit brighter in dark mode specifically (closer to white) */
+@media (prefers-color-scheme: dark) {
+  .recharts-cartesian-axis text,
+  .recharts-legend text,
+  .recharts-tooltip text,
+  .recharts-text {
+    fill: rgba(255,255,255,0.95) !important;
+    color: rgba(255,255,255,0.95) !important;
+    opacity: 1;
+  }
+}
+
 /* Stack charts vertically on narrower viewports */
 @media (max-width: 768px) {
   .charts-container {
