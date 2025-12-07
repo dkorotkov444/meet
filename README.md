@@ -1,88 +1,137 @@
-﻿# Meet Event Finder (React + Vite)
+# Meet
 
-Meet is a serverless, progressive web application (PWA) built with React and Vite. It allows users to search events in different locations and was developed using a test-driven development (TDD) approach. The application uses the Google Calendar API to fetch upcoming events.
+Meet is a serverless, progressive web application (PWA) that helps users discover upcoming events across multiple cities. Built with React and Vite, the app integrates with Google Calendar API to fetch real-time event data and was developed using test-driven development (TDD) principles.
 
-Summary
--------
+## Summary
 
-Meet helps users discover upcoming events across multiple cities, adjust the number of results, view event details, and access analytics â€” all in a PWA that works offline and can be installed to a device home screen.
+Meet allows users to search and filter events by city, adjust the number of results displayed, view detailed event information with Google Calendar links, and analyze event distribution across cities through interactive charts. The app is fully functional offline using cached data and can be installed to a device home screen for quick access.
 
-Table of contents
------------------
+## Table of Contents
 
-- [Summary](#summary)
-- [Usage (Quick start)](#usage-quick-start)
+- [Quick Start](#quick-start)
 - [Key Features](#key-features)
-- [Notes](#notes)
+- [Prerequisites](#prerequisites)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
 - [Authentication (Google OAuth)](#authentication-google-oauth)
-- [UX details](#ux-details)
-- [Testing & coverage (quick notes)](#testing--coverage-quick-notes)
+- [UX Details](#ux-details)
+- [Testing & Coverage](#testing--coverage)
 - [Scenarios](#scenarios)
 - [User Stories](#user-stories)
-- [Original README (template content)](#react--vite)
 
-Usage (Quick start)
--------------------
+## Quick Start
 
-Install dependencies and run locally using npm:
+Install dependencies and run locally:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Other useful scripts (from `package.json`):
+The app will be available at `http://localhost:5173` (default Vite port).
+
+### Useful Commands
 
 ```bash
-npm run build   # build for production
-npm run preview # preview production build
-npm run lint    # run ESLint
+npm run build   # Build for production
+npm run preview # Preview the production build locally
+npm run lint    # Run ESLint to check code quality
+npm test        # Run tests with Jest
+npm test -- --coverage  # Run tests with coverage report
 ```
 
-Key Features
-------------
+## Key Features
 
-1. Filter Events by City
-2. Show/Hide Event Details
-3. Specify Number of Events
-4. Use the App When Offline
-5. Add an App Shortcut to the Home Screen
-6. Display Charts Visualizing Event Details
+1. **Filter Events by City** — Search for events in specific cities or view all upcoming events. The app provides autocomplete suggestions as you type.
 
-Notes
------
+2. **Show/Hide Event Details** — Expand or collapse event cards to quickly scan the list or view full details including event descriptions and links to Google Calendar.
 
-- The project is a React + Vite app. For local development, use the scripts in `package.json` (e.g., `npm install` then `npm run dev`).
-- Formatted user stories and scenarios are available in `docs/user-stories.md` and `docs/scenarios.md`.
+3. **Specify Number of Events** — Control how many events are displayed at once. Default is 32 events; adjust to your preference to reduce scrolling and improve performance.
 
-Authentication (Google OAuth)
+4. **Use the App When Offline** — The app caches event data using Workbox. When offline, you can still view previously loaded events (though you cannot fetch new data without a connection).
 
-The serverless handlers in `auth-server/` implement three small helpers used by the app:
+5. **Add an App Shortcut to the Home Screen** — Install the app on your device's home screen for quick access, just like a native app. Works on mobile browsers and desktop.
 
-- `getAuthURL` — returns the Google OAuth consent URL to start the sign-in flow and obtain an authorization code.
-- `getAccessToken` — exchanges the authorization code for a short-lived access token.
-- `getCalendarEvents` — calls Google Calendar with the access token and returns the user's events.
+6. **Display Charts Visualizing Event Details** — View interactive charts that show event distribution across cities and event genre breakdowns. Powered by Recharts, these visualizations provide quick insights into event patterns.
 
-These handlers keep secrets server-side and enable a secure OAuth flow for fetching calendar data.
+## Prerequisites
 
-UX details
-----------
+- **Node.js** (v14 or later recommended) and **npm** (v6 or later)
+- **Google Calendar API credentials** — You'll need to set up OAuth credentials in the Google Cloud Console and configure them in the `auth-server/` configuration
+- A modern browser that supports PWA features (Chrome, Edge, Firefox, Safari on iOS 16+)
 
-Event element (summary of behavior):
+## Tech Stack
 
-- Each event item shows the summary (title), start time (and timezone if available), and location in the collapsed state.
-- Clicking "show details" expands a small details area containing a short heading "About event:", a link "See details on Google Calendar" (uses `htmlLink`), and the event description.
-- The details panel is intentionally compact to make scanning the list easy.
+- **Frontend:** React 19, Vite 7 (for fast builds and HMR)
+- **Styling:** CSS (custom styles in `src/App.css`)
+- **PWA & Offline:** Workbox (caching, service workers), vite-plugin-pwa
+- **Charts:** Recharts (interactive data visualization)
+- **State Management:** React Hooks (useState, useEffect)
+- **API Integration:** Google Calendar API
+- **Testing:** Jest, React Testing Library (jsdom), jest-cucumber for BDD
+- **Code Quality:** ESLint
+- **Monitoring:** Atatus (error tracking)
 
-Testing & coverage (quick notes)
---------------------------------
+## Project Structure
 
-- Tests are written with Jest and React Testing Library (jsdom). Run with `npm test`.
-- Because jsdom does not implement actual browser navigation, tests mock or avoid real assignments to `window.location.href`. The auth/redirect flows in `getAccessToken` are tested by mocking URLSearchParams/localStorage and fetch responses.
-- For coverage: `npm test -- --coverage`.
+```
+meet/
+├── src/
+│   ├── components/           # React components (Alert, CitySearch, EventList, etc.)
+│   ├── features/             # BDD feature files and tests (Cucumber-style)
+│   ├── __tests__/            # Jest unit and integration tests
+│   ├── api.js                # Google Calendar API integration
+│   ├── App.jsx               # Root component
+│   ├── App.css               # Styles
+│   ├── service-worker.js     # Service worker for offline support
+│   └── main.jsx              # Entry point
+├── auth-server/              # Serverless functions for OAuth flow
+│   ├── handler.js            # Lambda handler with getAuthURL, getAccessToken, getCalendarEvents
+│   ├── config.json           # Configuration (API keys, endpoints)
+│   └── serverless.yml        # Serverless Framework config
+├── docs/                     # Documentation
+│   ├── user-stories.md       # Detailed user stories
+│   └── scenarios.md          # BDD scenarios
+├── public/                   # Static assets (manifest.json for PWA)
+├── package.json              # Dependencies and scripts
+├── vite.config.js            # Vite configuration
+└── jest.config.cjs           # Jest configuration
+```
 
-Scenarios
----------
+## Authentication (Google OAuth)
+
+The serverless handlers in `auth-server/` implement three OAuth helpers:
+
+- **`getAuthURL`** — Returns the Google OAuth consent screen URL. Initiates the sign-in flow and generates an authorization code.
+- **`getAccessToken`** — Exchanges the authorization code for a short-lived access token. Secrets are kept server-side.
+- **`getCalendarEvents`** — Calls Google Calendar API with the access token and returns the user's upcoming events.
+
+This architecture keeps sensitive credentials (client secret, API keys) on the server while the frontend securely communicates via HTTPS. The OAuth flow ensures users grant consent before the app accesses their calendar.
+
+## UX Details
+
+### Event Element Behavior
+
+- **Collapsed State:** Each event item displays the event title, start time (and timezone if available), and location.
+- **Expanded State:** Clicking "show details" reveals:
+  - A brief "About event:" section
+  - A link to "See details on Google Calendar" (the event's Google Calendar URL)
+  - The full event description
+- **Design:** The details panel is intentionally compact to keep the list scannable and avoid excessive scrolling.
+
+## Testing & Coverage
+
+Tests are written with **Jest** and **React Testing Library** (using jsdom environment).
+
+### Key Testing Approaches
+
+- Run all tests: `npm test`
+- Generate coverage report: `npm test -- --coverage`
+- Tests cover component rendering, state changes, user interactions, and API integration
+- **jsdom Limitations:** jsdom doesn't implement actual browser navigation, so tests mock `window.location.href` assignments and use mocked fetch responses for OAuth and API calls
+- **BDD Features:** Located in `src/features/`, these tests use jest-cucumber syntax to validate user stories and scenarios
+
+## Scenarios
 
 ### Feature 1. Filter Events By City
 
@@ -194,10 +243,7 @@ Scenarios
 
 *Then* the system displays a chart (e.g., a bar chart) visualizing the count of upcoming events for each city.
 
-
-
-User Stories
-------------
+## User Stories
 
 ### Feature 1. Filter Events by City
 
@@ -222,20 +268,3 @@ User story: As a mobile user, I should be able to add an app shortcut to my home
 ### Feature 6. Display Charts Visualizing Event Details
 
 User story: As a user or organizer, I should be able to view charts visualizing event statistics, so that I can gain high-level insights into performance at a glance.
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
