@@ -25,9 +25,9 @@ dist-ssr
 *.sw?
 
 # Testing
-src/assets/mock-data.json
+#src/assets/mock-data.json
 coverage
 
 # Selected documents
-docs/ci-cd.md
-docs/atatus-review.md
+#docs/ci-cd.md
+#docs/atatus-review.md
